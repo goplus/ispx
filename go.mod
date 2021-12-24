@@ -3,8 +3,8 @@ module github.com/goplus/ispx
 go 1.16
 
 require (
-	github.com/goplus/gossa v0.2.12
-	github.com/goplus/reflectx v0.7.2
+	github.com/goplus/gossa v0.2.13
+	github.com/goplus/reflectx v0.7.3
 	github.com/goplus/spx v1.0.0-rc4
 )
 

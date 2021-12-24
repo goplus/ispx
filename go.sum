@@ -15,12 +15,12 @@ github.com/goplus/canvas v0.1.0/go.mod h1:Rhcvo5qkpD9WuXFnvnXtrBSY97l6h7sXQuofrm
 github.com/goplus/gop v1.0.36/go.mod h1:JMjZXjcfATZdT+1SIU4bXpaXJIvs6xTNVzjI8+XQhRM=
 github.com/goplus/gop v1.0.37 h1:U7/Asf3IyJBC38DXii56JF5hw94TayUs5Vg6XT5Wi14=
 github.com/goplus/gop v1.0.37/go.mod h1:JMjZXjcfATZdT+1SIU4bXpaXJIvs6xTNVzjI8+XQhRM=
-github.com/goplus/gossa v0.2.12 h1:VnD3zDe/5rC0NupN3Fz7lFRxjoCY+RtowYxYfeFiDR0=
-github.com/goplus/gossa v0.2.12/go.mod h1:t9hDgp8tbTLhWVr07gPHcpvmVZgMmWIG9oU7DQBI3r0=
+github.com/goplus/gossa v0.2.13 h1:5nEbN6/JVKk9djh5lhYsWcg7zujHQ6BRIGtdqlVfcvE=
+github.com/goplus/gossa v0.2.13/go.mod h1:jAasirOBj97IMN/daNamZflfevWdJblOTFF2mim6ln0=
 github.com/goplus/gox v1.8.7 h1:XtUEazI+EMSyN9A0IGbrPe99dpT5lnD1k98HwmVL9Nc=
 github.com/goplus/gox v1.8.7/go.mod h1:XWqV75HImeysI8+Q9gAdYyvwlP8jds24xsgYRwTO3JI=
-github.com/goplus/reflectx v0.7.2 h1:/kKdGMT8NyX+V8lfV0NNUlrl0AKiameY7L2RkT4ih4E=
-github.com/goplus/reflectx v0.7.2/go.mod h1:XPDe5lYQ/8FN05bhqv6r1hhLxwmYIkZ5UvIkN1GNRYg=
+github.com/goplus/reflectx v0.7.3 h1:Wbqlbn76dysG1DvUjrgnFuwjfD708//5cHnUFYJ8Yrw=
+github.com/goplus/reflectx v0.7.3/go.mod h1:XPDe5lYQ/8FN05bhqv6r1hhLxwmYIkZ5UvIkN1GNRYg=
 github.com/goplus/spx v1.0.0-rc4 h1:nwcRvOOJmDUAss59uLCvj7UVXYykptpNkqODF/nC6bU=
 github.com/goplus/spx v1.0.0-rc4/go.mod h1:ilG5wLofbpVYEJ2oqeRsouglrh3aRriw6V0SHloMGLA=
 github.com/hajimehoshi/bitmapfont/v2 v2.1.3/go.mod h1:2BnYrkTQGThpr/CY6LorYtt/zEPNzvE/ND69CRTaHMs=

@@ -12,23 +12,26 @@ Go 1.17
 GOEXPERIMENT=noregabi go get -v github.com/visualfc/ispx
 ```
 
-
 ### ispx command
 ```
-ispc [-dumpsrc|-dumppkg|-dumpssa] dir
+ispc [flags] dir
   -dumppkg
     	print import packages
   -dumpsrc
     	print source code
   -dumpssa
     	print ssa code information
+  -ghtoken string
+    	set github.com api token
+  -v	print verbose information
 ```
 
-### run spx demo
+### install spx
 * install ispx
 ```
 $ GOEXPERIMENT=noregabi go get -v github.com/visualfc/ispx
 ```
+### run spx demo
 * get spx FlappyCalf demo
 ```
 $ git clone https://github.com/goplus/FlappyCalf
@@ -43,4 +46,15 @@ $ ispx FlappyCalf
 ```
 $ cd FlappyCalf
 $ ispx .
+```
+### run spx remote demo
+
+* GitHub API token
+
+rate limiting <https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting>
+
+token <https://github.com/settings/tokens>
+
+```
+$ ispx -ghtoken your_github_api_token https://github.com/goplus/FlappyCalf
 ```

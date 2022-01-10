@@ -8,9 +8,11 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/goplus/gossa"
 	"github.com/goplus/gossa/gopbuild"
+	"github.com/goplus/ispx/github"
 	"github.com/goplus/spx"
 
 	_ "github.com/goplus/gossa/pkg/fmt"
@@ -21,19 +23,23 @@ import (
 )
 
 var (
-	flagDumpSrc bool
-	flagDumpPkg bool
-	flagDumpSSA bool
+	flagDumpSrc     bool
+	flagDumpPkg     bool
+	flagDumpSSA     bool
+	flagGithubToken string
+	flagVerbose     bool
 )
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "ispc [-dumpsrc|-dumppkg|-dumpssa] dir\n")
+		fmt.Fprintf(os.Stderr, "ispc [flags] dir\n")
 		flag.PrintDefaults()
 	}
 	flag.BoolVar(&flagDumpSrc, "dumpsrc", false, "print source code")
 	flag.BoolVar(&flagDumpPkg, "dumppkg", false, "print import packages")
 	flag.BoolVar(&flagDumpSSA, "dumpssa", false, "print ssa code information")
+	flag.BoolVar(&flagVerbose, "v", false, "print verbose information")
+	flag.StringVar(&flagGithubToken, "ghtoken", "", "set github.com api token")
 }
 
 func main() {
@@ -52,21 +58,54 @@ func main() {
 		mode |= gossa.EnableTracing
 	}
 	ctx := gossa.NewContext(mode)
-	data, err := gopbuild.BuildDir(ctx, path)
-	if err != nil {
-		log.Panicln(err)
+	var (
+		data []byte
+		err  error
+	)
+	if strings.HasPrefix(path, "https://github.com") {
+		if flagVerbose {
+			github.Verbose = true
+		}
+		client := github.NewClient(flagGithubToken)
+		fs, err := github.NewFileSystem(client, path)
+		if err != nil {
+			log.Fatalln("error", err)
+		}
+		if flagVerbose {
+			log.Println("BuildDir", path)
+		}
+		data, err = gopbuild.BuildFSDir(ctx, fs, path)
+		if err != nil {
+			log.Panicln(err)
+		}
+		gossa.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
+			assert := path + "/" + resource.(string)
+			fs, err := github.NewDir(client, assert)
+			if err != nil {
+				log.Panicln(err)
+			}
+			spx.Gopt_Game_Run(game, fs, gameConf...)
+		})
+	} else {
+		if flagVerbose {
+			log.Println("BuildDir", path)
+		}
+		data, err = gopbuild.BuildDir(ctx, path)
+		if err != nil {
+			log.Panicln(err)
+		}
+		if !filepath.IsAbs(path) {
+			dir, _ := os.Getwd()
+			path = filepath.Join(dir, path)
+		}
+		os.Chdir(path)
+		if flagVerbose {
+			log.Println("Chdir", path)
+		}
 	}
 	if flagDumpSrc {
 		fmt.Println(string(data))
 	}
-	if !filepath.IsAbs(path) {
-		dir, _ := os.Getwd()
-		path = filepath.Join(dir, path)
-	}
-	gossa.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
-		os.Chdir(path)
-		spx.Gopt_Game_Run(game, resource, gameConf...)
-	})
 	_, err = ctx.RunFile("main.go", data, nil)
 	if err != nil {
 		log.Panicln(err)

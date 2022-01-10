@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/goplus/gossa"
 	"github.com/goplus/gossa/gopbuild"
@@ -62,24 +61,24 @@ func main() {
 		data []byte
 		err  error
 	)
-	if strings.HasPrefix(path, "https://github.com") {
+	if root, ok := github.IsSupport(path); ok {
 		if flagVerbose {
 			github.Verbose = true
 		}
 		client := github.NewClient(flagGithubToken)
-		fs, err := github.NewFileSystem(client, path)
+		fs, err := github.NewFileSystem(client, root)
 		if err != nil {
 			log.Fatalln("error", err)
 		}
 		if flagVerbose {
-			log.Println("BuildDir", path)
+			log.Println("BuildDir", root)
 		}
-		data, err = gopbuild.BuildFSDir(ctx, fs, path)
+		data, err = gopbuild.BuildFSDir(ctx, fs, root)
 		if err != nil {
 			log.Panicln(err)
 		}
 		gossa.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
-			assert := path + "/" + resource.(string)
+			assert := root + "/" + resource.(string)
 			fs, err := github.NewDir(client, assert)
 			if err != nil {
 				log.Panicln(err)

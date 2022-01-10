@@ -56,5 +56,5 @@ rate limiting <https://docs.github.com/en/rest/overview/resources-in-the-rest-ap
 token <https://github.com/settings/tokens>
 
 ```
-$ ispx -ghtoken your_github_api_token https://github.com/goplus/FlappyCalf
+$ ispx -ghtoken your_github_api_token github.com/goplus/FlappyCalf
 ```

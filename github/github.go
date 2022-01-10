@@ -39,8 +39,13 @@ type FileSystem struct {
 	cur    time.Time
 }
 
-func IsSupport(root string) bool {
-	return strings.HasPrefix(root, githubPrefix)
+func IsSupport(root string) (string, bool) {
+	if strings.HasPrefix(root, githubPrefix) {
+		return root, true
+	} else if strings.HasPrefix(root, "github.com/") {
+		return "https://" + root, true
+	}
+	return "", false
 }
 
 const (

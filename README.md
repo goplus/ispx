@@ -3,13 +3,8 @@ The Interpreter  of Go+ spx engine
 
 
 ### install ispx
-Go 1.16
 ```
 go get github.com/visualfc/ispx
-```
-Go 1.17
-```
-GOEXPERIMENT=noregabi go get -v github.com/visualfc/ispx
 ```
 
 ### ispx command
@@ -29,7 +24,7 @@ ispc [flags] dir
 ### install spx
 * install ispx
 ```
-$ GOEXPERIMENT=noregabi go get -v github.com/visualfc/ispx
+$ go get -v github.com/visualfc/ispx
 ```
 ### run spx demo
 * get spx FlappyCalf demo

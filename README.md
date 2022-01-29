@@ -4,7 +4,7 @@ The Interpreter  of Go+ spx engine
 
 ### install ispx
 ```
-go get github.com/visualfc/ispx
+go get github.com/goplus/ispx
 ```
 
 ### ispx command
@@ -21,11 +21,6 @@ ispc [flags] dir
   -v	print verbose information
 ```
 
-### install spx
-* install ispx
-```
-$ go get -v github.com/visualfc/ispx
-```
 ### run spx demo
 * get spx FlappyCalf demo
 ```

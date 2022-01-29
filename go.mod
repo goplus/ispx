@@ -4,8 +4,8 @@ go 1.16
 
 require (
 	github.com/google/go-github/v41 v41.0.0
-	github.com/goplus/gossa v0.3.0
-	github.com/goplus/reflectx v0.8.0
+	github.com/goplus/gossa v0.3.3
+	github.com/goplus/reflectx v0.8.2
 	github.com/goplus/spx v1.0.0-rc5
 	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
 )

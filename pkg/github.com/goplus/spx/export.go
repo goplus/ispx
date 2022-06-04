@@ -1,4 +1,4 @@
-// export by github.com/goplus/gossa/cmd/qexp
+// export by github.com/goplus/igop/cmd/qexp
 
 package spx
 
@@ -8,11 +8,11 @@ import (
 	"go/constant"
 	"reflect"
 
-	"github.com/goplus/gossa"
+	"github.com/goplus/igop"
 )
 
 func init() {
-	gossa.RegisterPackage(&gossa.Package{
+	igop.RegisterPackage(&igop.Package{
 		Name: "spx",
 		Path: "github.com/goplus/spx",
 		Deps: map[string]string{
@@ -66,7 +66,7 @@ func init() {
 			"Gamer": reflect.TypeOf((*q.Gamer)(nil)).Elem(),
 			"Shape": reflect.TypeOf((*q.Shape)(nil)).Elem(),
 		},
-		NamedTypes: map[string]gossa.NamedType{
+		NamedTypes: map[string]igop.NamedType{
 			"Camera":        {reflect.TypeOf((*q.Camera)(nil)).Elem(), "", "ChangeXYpos,On,SetXYpos,init,isWorldRange,render,screenToWorld,updateOnObj"},
 			"Config":        {reflect.TypeOf((*q.Config)(nil)).Elem(), "", ""},
 			"EffectKind":    {reflect.TypeOf((*q.EffectKind)(nil)).Elem(), "String", ""},
@@ -103,7 +103,7 @@ func init() {
 			"SchedNow":             reflect.ValueOf(q.SchedNow),
 			"SetDebug":             reflect.ValueOf(q.SetDebug),
 		},
-		TypedConsts: map[string]gossa.TypedConst{
+		TypedConsts: map[string]igop.TypedConst{
 			"AllOtherScripts":      {reflect.TypeOf(q.AllOtherScripts), constant.MakeInt64(int64(q.AllOtherScripts))},
 			"AllSprites":           {reflect.TypeOf(q.AllSprites), constant.MakeInt64(int64(q.AllSprites))},
 			"BrightnessEffect":     {reflect.TypeOf(q.BrightnessEffect), constant.MakeInt64(int64(q.BrightnessEffect))},
@@ -226,7 +226,7 @@ func init() {
 			"ThisSprite":           {reflect.TypeOf(q.ThisSprite), constant.MakeInt64(int64(q.ThisSprite))},
 			"Up":                   {reflect.TypeOf(q.Up), constant.MakeInt64(int64(q.Up))},
 		},
-		UntypedConsts: map[string]gossa.UntypedConst{
+		UntypedConsts: map[string]igop.UntypedConst{
 			"All":          {"untyped int", constant.MakeInt64(int64(q.All))},
 			"DbgFlagAll":   {"untyped int", constant.MakeInt64(int64(q.DbgFlagAll))},
 			"DbgFlagEvent": {"untyped int", constant.MakeInt64(int64(q.DbgFlagEvent))},

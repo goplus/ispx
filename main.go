@@ -9,13 +9,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/goplus/gossa"
-	"github.com/goplus/gossa/gopbuild"
+	"github.com/goplus/igop"
+	"github.com/goplus/igop/gopbuild"
 	"github.com/goplus/ispx/github"
 	"github.com/goplus/spx"
 
-	_ "github.com/goplus/gossa/pkg/fmt"
-	_ "github.com/goplus/gossa/pkg/math"
+	_ "github.com/goplus/igop/pkg/fmt"
+	_ "github.com/goplus/igop/pkg/math"
 	_ "github.com/goplus/ispx/pkg/github.com/goplus/spx"
 
 	_ "github.com/goplus/reflectx/icall/icall8192"
@@ -23,8 +23,9 @@ import (
 
 var (
 	flagDumpSrc     bool
-	flagDumpPkg     bool
+	flagTrace       bool
 	flagDumpSSA     bool
+	flagDumpPKG     bool
 	flagGithubToken string
 	flagVerbose     bool
 )
@@ -35,8 +36,9 @@ func init() {
 		flag.PrintDefaults()
 	}
 	flag.BoolVar(&flagDumpSrc, "dumpsrc", false, "print source code")
-	flag.BoolVar(&flagDumpPkg, "dumppkg", false, "print import packages")
 	flag.BoolVar(&flagDumpSSA, "dumpssa", false, "print ssa code information")
+	flag.BoolVar(&flagDumpPKG, "dumppkg", false, "print import pkgs")
+	flag.BoolVar(&flagTrace, "trace", false, "trace")
 	flag.BoolVar(&flagVerbose, "v", false, "print verbose information")
 	flag.StringVar(&flagGithubToken, "ghtoken", "", "set github.com api token")
 }
@@ -49,14 +51,17 @@ func main() {
 		return
 	}
 	path := args[0]
-	var mode gossa.Mode
-	if flagDumpPkg {
-		mode |= gossa.EnableDumpPackage
-	}
+	var mode igop.Mode
 	if flagDumpSSA {
-		mode |= gossa.EnableTracing
+		mode |= igop.EnableDumpInstr
 	}
-	ctx := gossa.NewContext(mode)
+	if flagTrace {
+		mode |= igop.EnableTracing
+	}
+	if flagDumpPKG {
+		mode |= igop.EnableDumpImports
+	}
+	ctx := igop.NewContext(mode)
 	var (
 		data []byte
 		err  error
@@ -77,7 +82,7 @@ func main() {
 		if err != nil {
 			log.Panicln(err)
 		}
-		gossa.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
+		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
 			assert := root + "/" + resource.(string)
 			fs, err := github.NewDir(client, assert)
 			if err != nil {

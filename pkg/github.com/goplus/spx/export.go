@@ -1,4 +1,4 @@
-// export by github.com/goplus/gossa/cmd/qexp
+// export by github.com/goplus/igop/cmd/qexp
 
 package spx
 
@@ -8,11 +8,11 @@ import (
 	"go/constant"
 	"reflect"
 
-	"github.com/goplus/gossa"
+	"github.com/goplus/igop"
 )
 
 func init() {
-	gossa.RegisterPackage(&gossa.Package{
+	igop.RegisterPackage(&igop.Package{
 		Name: "spx",
 		Path: "github.com/goplus/spx",
 		Deps: map[string]string{
@@ -66,19 +66,19 @@ func init() {
 			"Gamer": reflect.TypeOf((*q.Gamer)(nil)).Elem(),
 			"Shape": reflect.TypeOf((*q.Shape)(nil)).Elem(),
 		},
-		NamedTypes: map[string]gossa.NamedType{
-			"Camera":        {reflect.TypeOf((*q.Camera)(nil)).Elem(), "", "ChangeXYpos,On,SetXYpos,init,isWorldRange,render,screenToWorld,updateOnObj"},
-			"Config":        {reflect.TypeOf((*q.Config)(nil)).Elem(), "", ""},
-			"EffectKind":    {reflect.TypeOf((*q.EffectKind)(nil)).Elem(), "String", ""},
-			"Game":          {reflect.TypeOf((*q.Game)(nil)).Elem(), "", "Answer,Ask,Broadcast__0,Broadcast__1,Broadcast__2,ChangeEffect,ChangeVolume,ClearSoundEffects,Draw,EraseAll,HideVar,KeyPressed,Layout,Loudness,MouseHitItem,MousePressed,MouseX,MouseY,NextScene,Play__0,PrevScene,ResetTimer,SceneIndex,SceneName,SetEffect,SetVolume,ShowVar,StartScene,StopAllSounds,Timer,Update,Username,Volume,Wait,activateShape,addClonedShape,addShape,addSpecialShape,addStageSprite,addStageSprites,currentTPS,doBroadcast,doFindSprite,doWhenLeftButtonDown,doWindowSize,doWorldSize,drawBackground,endLoad,eventLoop,findSprite,fireEvent,getItems,getMousePos,getSharedImgs,getTurtle,getWidth,goBackByLayers,handleEvent,initEventLoop,initGame,loadIndex,loadSound,loadSprite,movePen,objectPos,onDraw,onHit,removeShape,reset,runLoop,setStageMonitor,stampCostume,startLoad,startTick,touchingPoint,touchingSpriteBy,updateMousePos,windowSize_,worldSize_"},
-			"List":          {reflect.TypeOf((*q.List)(nil)).Elem(), "", "Append,At,Contains,Delete,Init,InitFrom,Insert,Len,Set,String"},
-			"MovingInfo":    {reflect.TypeOf((*q.MovingInfo)(nil)).Elem(), "", "Dx,Dy,StopMoving"},
-			"RotationStyle": {reflect.TypeOf((*q.RotationStyle)(nil)).Elem(), "", ""},
-			"Sound":         {reflect.TypeOf((*q.Sound)(nil)).Elem(), "", ""},
-			"Sprite":        {reflect.TypeOf((*q.Sprite)(nil)).Elem(), "", "Animate,Ask,BounceOffEdge,Bounds,ChangeEffect,ChangeHeading,ChangePenColor,ChangePenHue,ChangePenShade,ChangePenSize,ChangeSize,ChangeXYpos,ChangeXpos,ChangeYpos,ClearGraphEffects,CostumeHeight,CostumeIndex,CostumeName,CostumeWidth,Destroy,Die,DistanceTo,Glide__0,Glide__1,GoBackLayers,Goto,GotoBack,GotoFront,Heading,Hide,HideVar,InitFrom,IsCloned,Move__0,Move__1,NextCostume,OnCloned__0,OnCloned__1,OnMoving__0,OnMoving__1,OnTouched__0,OnTouched__1,OnTouched__2,OnTouched__3,OnTouched__4,OnTouched__5,OnTurning__0,OnTurning__1,Parent,PenDown,PenUp,PrevCostume,Quote__0,Quote__1,Quote__2,Say,SetCostume,SetDying,SetEffect,SetHeading,SetPenColor,SetPenHue,SetPenShade,SetPenSize,SetRotationStyle,SetSize,SetXYpos,SetXpos,SetYpos,Show,ShowVar,Size,Stamp,Step__0,Step__1,Step__2,Think,Touching,TouchingColor,Turn,TurnTo,Visible,Xpos,Ypos,checkTouchingScreen,doDestroy,doMoveTo,doMoveToForAnim,doStopQuote,doStopSay,doTurnTogether,doUpdatePenColor,draw,fireTouched,fixWorldRange,getDrawInfo,getFromAnToForAni,getRotatedRect,getTrackPos,getXY,goAnimate,goMoveForward,hit,init,quote_,requireGreffUniforms,sayOrThink,setDirection,setPenHue,setPenShade,setPenWidth,touchPoint,touchRotatedRect,touchedColor_,touchingSprite,waitStopQuote,waitStopSay"},
-			"StopKind":      {reflect.TypeOf((*q.StopKind)(nil)).Elem(), "", ""},
-			"TurningInfo":   {reflect.TypeOf((*q.TurningInfo)(nil)).Elem(), "", "Dir"},
-			"Value":         {reflect.TypeOf((*q.Value)(nil)).Elem(), "Equal,Float,Int,String", ""},
+		NamedTypes: map[string]reflect.Type{
+			"Camera":        reflect.TypeOf((*q.Camera)(nil)).Elem(),
+			"Config":        reflect.TypeOf((*q.Config)(nil)).Elem(),
+			"EffectKind":    reflect.TypeOf((*q.EffectKind)(nil)).Elem(),
+			"Game":          reflect.TypeOf((*q.Game)(nil)).Elem(),
+			"List":          reflect.TypeOf((*q.List)(nil)).Elem(),
+			"MovingInfo":    reflect.TypeOf((*q.MovingInfo)(nil)).Elem(),
+			"RotationStyle": reflect.TypeOf((*q.RotationStyle)(nil)).Elem(),
+			"Sound":         reflect.TypeOf((*q.Sound)(nil)).Elem(),
+			"Sprite":        reflect.TypeOf((*q.Sprite)(nil)).Elem(),
+			"StopKind":      reflect.TypeOf((*q.StopKind)(nil)).Elem(),
+			"TurningInfo":   reflect.TypeOf((*q.TurningInfo)(nil)).Elem(),
+			"Value":         reflect.TypeOf((*q.Value)(nil)).Elem(),
 		},
 		AliasTypes: map[string]reflect.Type{
 			"Color":   reflect.TypeOf((*q.Color)(nil)).Elem(),
@@ -103,7 +103,7 @@ func init() {
 			"SchedNow":             reflect.ValueOf(q.SchedNow),
 			"SetDebug":             reflect.ValueOf(q.SetDebug),
 		},
-		TypedConsts: map[string]gossa.TypedConst{
+		TypedConsts: map[string]igop.TypedConst{
 			"AllOtherScripts":      {reflect.TypeOf(q.AllOtherScripts), constant.MakeInt64(int64(q.AllOtherScripts))},
 			"AllSprites":           {reflect.TypeOf(q.AllSprites), constant.MakeInt64(int64(q.AllSprites))},
 			"BrightnessEffect":     {reflect.TypeOf(q.BrightnessEffect), constant.MakeInt64(int64(q.BrightnessEffect))},
@@ -226,7 +226,7 @@ func init() {
 			"ThisSprite":           {reflect.TypeOf(q.ThisSprite), constant.MakeInt64(int64(q.ThisSprite))},
 			"Up":                   {reflect.TypeOf(q.Up), constant.MakeInt64(int64(q.Up))},
 		},
-		UntypedConsts: map[string]gossa.UntypedConst{
+		UntypedConsts: map[string]igop.UntypedConst{
 			"All":          {"untyped int", constant.MakeInt64(int64(q.All))},
 			"DbgFlagAll":   {"untyped int", constant.MakeInt64(int64(q.DbgFlagAll))},
 			"DbgFlagEvent": {"untyped int", constant.MakeInt64(int64(q.DbgFlagEvent))},

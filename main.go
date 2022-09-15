@@ -17,7 +17,6 @@ import (
 	_ "github.com/goplus/igop/pkg/fmt"
 	_ "github.com/goplus/igop/pkg/math"
 	_ "github.com/goplus/ispx/pkg/github.com/goplus/spx"
-
 	_ "github.com/goplus/reflectx/icall/icall8192"
 )
 

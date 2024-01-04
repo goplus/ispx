@@ -1,10 +1,10 @@
 # ispx
-The Interpreter  of Go+ spx engine
+The Interpreter of Go+ spx engine
 
 
 ### install ispx
 ```
-go get github.com/goplus/ispx
+go install github.com/goplus/ispx@latest
 ```
 
 ### ispx command
@@ -43,7 +43,7 @@ $ ispx .
 
 rate limiting <https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting>
 
-token <https://github.com/settings/tokens>
+generate token <https://github.com/settings/tokens>
 
 ```
 $ ispx -ghtoken your_github_api_token github.com/goplus/FlappyCalf

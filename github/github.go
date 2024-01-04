@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -75,7 +75,13 @@ func parserUrl(dirname string) (owner, repo, path string) {
 	return
 }
 
-func (f *FileSystem) ReadDir(dirname string) ([]os.FileInfo, error) {
+// type FileSystem interface {
+// 	ReadDir(dirname string) ([]fs.DirEntry, error)
+// 	ReadFile(filename string) ([]byte, error)
+// 	Join(elem ...string) string
+// }
+
+func (f *FileSystem) ReadDir(dirname string) ([]fs.DirEntry, error) {
 	owner, repo, path := parserUrl(dirname)
 	_, dirs, _, err := f.client.Repositories.GetContents(f.ctx, owner, repo, path, nil)
 	if Verbose {
@@ -84,9 +90,9 @@ func (f *FileSystem) ReadDir(dirname string) ([]os.FileInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-	var list []os.FileInfo
+	var list []fs.DirEntry
 	for _, v := range dirs {
-		list = append(list, &FileInfo{c: v, t: f.cur})
+		list = append(list, &DirEntry{&FileInfo{c: v, t: f.cur}})
 	}
 	return list, nil
 }
@@ -140,7 +146,7 @@ func (f *FileInfo) Name() string {
 func (f *FileInfo) Size() int64 {
 	return int64(f.c.GetSize())
 }
-func (f *FileInfo) Mode() os.FileMode {
+func (f *FileInfo) Mode() fs.FileMode {
 	if f.IsDir() {
 		return 0755
 	}
@@ -155,6 +161,35 @@ func (f *FileInfo) IsDir() bool {
 func (f *FileInfo) Sys() interface{} {
 	return nil
 }
+
+// type DirEntry interface {
+// 	Name() string
+// 	IsDir() bool
+// 	Type() FileMode
+// 	Info() (FileInfo, error)
+// }
+
+type DirEntry struct {
+	info *FileInfo
+}
+
+func (p *DirEntry) Name() string {
+	return p.info.Name()
+}
+
+func (p *DirEntry) IsDir() bool {
+	return p.info.IsDir()
+}
+
+func (p *DirEntry) Type() fs.FileMode {
+	return p.info.Mode()
+}
+
+func (p *DirEntry) Info() (fs.FileInfo, error) {
+	return p.info, nil
+}
+
+var _ fs.DirEntry = &DirEntry{}
 
 /*
 type Dir interface {

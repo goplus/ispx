@@ -66,6 +66,7 @@ func init() {
 			"Gamer": reflect.TypeOf((*q.Gamer)(nil)).Elem(),
 			"Shape": reflect.TypeOf((*q.Shape)(nil)).Elem(),
 		},
+<<<<<<< HEAD
 		NamedTypes: map[string]igop.NamedType{
 			"Camera":        {reflect.TypeOf((*q.Camera)(nil)).Elem(), "", "ChangeXYpos,On,SetXYpos,init,isWorldRange,render,screenToWorld,updateOnObj"},
 			"Config":        {reflect.TypeOf((*q.Config)(nil)).Elem(), "", ""},
@@ -79,6 +80,21 @@ func init() {
 			"StopKind":      {reflect.TypeOf((*q.StopKind)(nil)).Elem(), "", ""},
 			"TurningInfo":   {reflect.TypeOf((*q.TurningInfo)(nil)).Elem(), "", "Dir"},
 			"Value":         {reflect.TypeOf((*q.Value)(nil)).Elem(), "Equal,Float,Int,String", ""},
+=======
+		NamedTypes: map[string]reflect.Type{
+			"Camera":        reflect.TypeOf((*q.Camera)(nil)).Elem(),
+			"Config":        reflect.TypeOf((*q.Config)(nil)).Elem(),
+			"EffectKind":    reflect.TypeOf((*q.EffectKind)(nil)).Elem(),
+			"Game":          reflect.TypeOf((*q.Game)(nil)).Elem(),
+			"List":          reflect.TypeOf((*q.List)(nil)).Elem(),
+			"MovingInfo":    reflect.TypeOf((*q.MovingInfo)(nil)).Elem(),
+			"RotationStyle": reflect.TypeOf((*q.RotationStyle)(nil)).Elem(),
+			"Sound":         reflect.TypeOf((*q.Sound)(nil)).Elem(),
+			"Sprite":        reflect.TypeOf((*q.Sprite)(nil)).Elem(),
+			"StopKind":      reflect.TypeOf((*q.StopKind)(nil)).Elem(),
+			"TurningInfo":   reflect.TypeOf((*q.TurningInfo)(nil)).Elem(),
+			"Value":         reflect.TypeOf((*q.Value)(nil)).Elem(),
+>>>>>>> upstream/main
 		},
 		AliasTypes: map[string]reflect.Type{
 			"Color":   reflect.TypeOf((*q.Color)(nil)).Elem(),

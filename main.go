@@ -17,14 +17,14 @@ import (
 	_ "github.com/goplus/igop/pkg/fmt"
 	_ "github.com/goplus/igop/pkg/math"
 	_ "github.com/goplus/ispx/pkg/github.com/goplus/spx"
-
 	_ "github.com/goplus/reflectx/icall/icall8192"
 )
 
 var (
 	flagDumpSrc     bool
-	flagDumpInstr   bool
 	flagTrace       bool
+	flagDumpSSA     bool
+	flagDumpPKG     bool
 	flagGithubToken string
 	flagVerbose     bool
 )
@@ -35,8 +35,9 @@ func init() {
 		flag.PrintDefaults()
 	}
 	flag.BoolVar(&flagDumpSrc, "dumpsrc", false, "print source code")
-	flag.BoolVar(&flagDumpInstr, "dumpssa", false, "print ssa instr")
-	flag.BoolVar(&flagTrace, "trace", false, "trace ssa code")
+	flag.BoolVar(&flagDumpSSA, "dumpssa", false, "print ssa code information")
+	flag.BoolVar(&flagDumpPKG, "dumppkg", false, "print import pkgs")
+	flag.BoolVar(&flagTrace, "trace", false, "trace")
 	flag.BoolVar(&flagVerbose, "v", false, "print verbose information")
 	flag.StringVar(&flagGithubToken, "ghtoken", "", "set github.com api token")
 }
@@ -50,11 +51,14 @@ func main() {
 	}
 	path := args[0]
 	var mode igop.Mode
-	if flagDumpInstr {
+	if flagDumpSSA {
 		mode |= igop.EnableDumpInstr
 	}
 	if flagTrace {
 		mode |= igop.EnableTracing
+	}
+	if flagDumpPKG {
+		mode |= igop.EnableDumpImports
 	}
 	ctx := igop.NewContext(mode)
 	var (

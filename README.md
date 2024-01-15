@@ -51,4 +51,4 @@ $ ispx -ghtoken your_github_api_token github.com/goplus/FlappyCalf
 
 ### run spx offline demo
 
-see [Offline SPX Project](./offlineSpx/README.md)
+see [Offline SPX Project](offline_spx/README.md)

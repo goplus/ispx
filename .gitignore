@@ -16,4 +16,4 @@
 
 .vscode/
 .idea/
-main.wasm
+*.wasm

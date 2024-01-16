@@ -1,9 +1,8 @@
 package ifs
 
 import (
-	"errors"
+	"fmt"
 	"io/fs"
-	"log"
 	"path"
 	"strings"
 )
@@ -16,8 +15,7 @@ func NewIndexedDBFileSystem() *IndexedDBFileSystem {
 }
 
 // ReadDir Read directory contents
-func (IndexedDBFileSystem) ReadDir(dirname string) ([]fs.DirEntry, error) {
-	var entries []fs.DirEntry
+func (IndexedDBFileSystem) ReadDir(dirname string) (ret []fs.DirEntry, err error) {
 	dirname = path.Clean(dirname)
 	if dirname != "." && !strings.HasSuffix(dirname, "/") {
 		dirname += "/"
@@ -27,8 +25,8 @@ func (IndexedDBFileSystem) ReadDir(dirname string) ([]fs.DirEntry, error) {
 
 	filesList, err := getFilesStartingWith(dirname)
 	if err != nil {
-		log.Fatalln("read dir error:", err)
-		return nil, err
+		err = fmt.Errorf("error getting files starting with %s: %w", dirname, err)
+		return
 	}
 
 	for _, filePath := range filesList {
@@ -46,7 +44,7 @@ func (IndexedDBFileSystem) ReadDir(dirname string) ([]fs.DirEntry, error) {
 					return nil, err
 				}
 
-				entries = append(entries, IndexedDBDirEntry{
+				ret = append(ret, IndexedDBDirEntry{
 					Path:        entry,
 					IsDirectory: isDir,
 					Size:        fileProperties.Size,
@@ -58,16 +56,16 @@ func (IndexedDBFileSystem) ReadDir(dirname string) ([]fs.DirEntry, error) {
 
 	}
 
-	return entries, nil
+	return
 }
 
 // ReadFile Read file contents
-func (IndexedDBFileSystem) ReadFile(filename string) ([]byte, error) {
-	content, err := readFileFromIndexedDB(filename)
+func (IndexedDBFileSystem) ReadFile(filename string) (ret []byte, err error) {
+	ret, err = readFileFromIndexedDB(filename)
 	if err != nil {
-		return nil, errors.New("file not found")
+		err = fmt.Errorf("error reading file from IndexedDB: %w", err)
 	}
-	return content, nil
+	return
 }
 
 // Join Connect path elements

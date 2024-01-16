@@ -1,19 +1,16 @@
 package ifs
 
 import (
-	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"syscall/js"
 	"time"
 )
 
-func getFilesStartingWith(dirname string) ([]string, error) {
-	log.Println("getFilesStartingWith dirname:", dirname)
+func getFilesStartingWith(dirname string) (ret []string, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("getFilesStartingWith panic:", r)
+			err = fmt.Errorf("getFilesStartingWith panic: %v", r)
 		}
 	}()
 
@@ -24,7 +21,8 @@ func getFilesStartingWith(dirname string) ([]string, error) {
 	jsFunc := jsGlobal.Get("getFilesStartingWith")
 	// Check if function is defined
 	if jsFunc.Type() == js.TypeUndefined {
-		log.Panicln("getFilesStartingWith function is not defined.")
+		err = fmt.Errorf("getFilesStartingWith function is not defined")
+		return
 	}
 	// Call a JavaScript function, passing dirname as argument
 	promise := jsFunc.Invoke(dirname)
@@ -49,7 +47,7 @@ func getFilesStartingWith(dirname string) ([]string, error) {
 
 	// Define failure callback function
 	onError := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		log.Println("Error calling getFilesStartingWith:", args[0])
+		err = fmt.Errorf("error calling getFilesStartingWith")
 		done <- nil
 		return nil
 	})
@@ -58,21 +56,21 @@ func getFilesStartingWith(dirname string) ([]string, error) {
 	promise.Call("then", onSuccess)
 	promise.Call("catch", onError)
 	// Wait for Promise to resolve
-	result := <-done
+	ret = <-done
 
 	// Clean up callbacks
 	onSuccess.Release()
 	onError.Release()
-	if result == nil {
-		return nil, fmt.Errorf("error reading directory from IndexedDB")
+	if ret == nil {
+		err = fmt.Errorf("error reading directory from IndexedDB, result is empty")
 	}
-	return result, nil
+	return
 }
 
-func readFileFromIndexedDB(filename string) ([]byte, error) {
+func readFileFromIndexedDB(filename string) (ret []byte, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("readFileFromIndexedDB panic", r)
+			err = fmt.Errorf("readFileFromIndexedDB panic: %v", r)
 		}
 	}()
 
@@ -102,7 +100,7 @@ func readFileFromIndexedDB(filename string) ([]byte, error) {
 
 	// Define failure callback function
 	onError := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		fmt.Println("Error calling readFileFromIndexedDB:", args[0])
+		err = fmt.Errorf("error reading file from IndexedDB")
 		done <- nil
 		return nil
 	})
@@ -112,15 +110,15 @@ func readFileFromIndexedDB(filename string) ([]byte, error) {
 	promise.Call("catch", onError)
 
 	// Wait for Promise to resolve
-	result := <-done
+	ret = <-done
 	// Clean up callbacks
 	onSuccess.Release()
 	onError.Release()
 
-	if result == nil {
-		return nil, errors.New("error reading file from IndexedDB")
+	if ret == nil {
+		err = fmt.Errorf("error reading file from IndexedDB, result is empty")
 	}
-	return result, nil
+	return
 }
 
 type FileProperties struct {
@@ -128,10 +126,10 @@ type FileProperties struct {
 	LastModified time.Time
 }
 
-func getFileProperties(filename string) (FileProperties, error) {
+func getFileProperties(filename string) (ret FileProperties, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("getFileProperties panic:", r)
+			err = fmt.Errorf("getFileProperties panic: %v", r)
 		}
 	}()
 
@@ -167,7 +165,7 @@ func getFileProperties(filename string) (FileProperties, error) {
 
 	// Define failure callback function
 	onError := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		fmt.Println("Error calling getFileProperties:", args[0])
+		err = fmt.Errorf("error calling getFileProperties")
 		done <- FileProperties{}
 		return nil
 	})
@@ -177,14 +175,14 @@ func getFileProperties(filename string) (FileProperties, error) {
 	promise.Call("catch", onError)
 
 	// Wait for Promise to resolve
-	result := <-done
+	ret = <-done
 
 	// Clean up callbacks
 	onSuccess.Release()
 	onError.Release()
 
-	if result.Size == 0 && result.LastModified.IsZero() {
-		return FileProperties{}, errors.New("error getting file properties")
+	if ret.Size == 0 && ret.LastModified.IsZero() {
+		err = fmt.Errorf("error getting file properties, result is empty")
 	}
-	return result, nil
+	return
 }

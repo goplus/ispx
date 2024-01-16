@@ -28,7 +28,7 @@ function readFileFromIndexedDB(filePath) {
         const store = transaction.objectStore(storeName);
         const request = store.get(filePath);
 
-        request.onsuccess = function(event) {
+        request.onsuccess = function (event) {
             const fileData = event.target.result;
             if (fileData && fileData.content) {
                 resolve(new Uint8Array(fileData.content)); // 假设 content 是 ArrayBuffer
@@ -37,7 +37,7 @@ function readFileFromIndexedDB(filePath) {
             }
         };
 
-        request.onerror = function(event) {
+        request.onerror = function (event) {
             reject('Error reading file from IndexedDB: ' + event.target.errorCode);
         };
     });
@@ -50,7 +50,7 @@ function getFileProperties(filePath) {
         const store = transaction.objectStore(storeName);
         const request = store.get(filePath);
 
-        request.onsuccess = function(event) {
+        request.onsuccess = function (event) {
             const fileData = event.target.result;
             if (fileData) {
                 resolve({
@@ -62,7 +62,7 @@ function getFileProperties(filePath) {
             }
         };
 
-        request.onerror = function(event) {
+        request.onerror = function (event) {
             reject('Error querying file properties from IndexedDB: ' + event.target.errorCode);
         };
     });
@@ -76,7 +76,7 @@ function getFilesStartingWith(dirname) {
         const request = store.getAll();
         const files = [];
 
-        request.onsuccess = function(event) {
+        request.onsuccess = function (event) {
             const allFiles = event.target.result;
             allFiles.forEach(file => {
                 if (file.path.startsWith(dirname)) {
@@ -86,7 +86,7 @@ function getFilesStartingWith(dirname) {
             resolve(files);
         };
 
-        request.onerror = function(event) {
+        request.onerror = function (event) {
             reject('Error querying IndexedDB: ' + event.target.errorCode);
         };
     });

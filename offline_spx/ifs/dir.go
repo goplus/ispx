@@ -2,10 +2,9 @@ package ifs
 
 import (
 	"bytes"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 )
 
 // IndexedDBDir is the implementation of a fs.Dir
@@ -20,10 +19,10 @@ func NewIndexedDBDir(assert string) *IndexedDBDir {
 }
 
 // Open opens a file
-func (d *IndexedDBDir) Open(file string) (io.ReadCloser, error) {
+func (d *IndexedDBDir) Open(file string) (ret io.ReadCloser, err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Printf("IndexedDBDir.Open %s panic %s\n", file, r)
+			err = fmt.Errorf("IndexedDBDir.Open %s panic %s", file, r)
 		}
 	}()
 
@@ -31,9 +30,10 @@ func (d *IndexedDBDir) Open(file string) (io.ReadCloser, error) {
 
 	content, err := readFileFromIndexedDB(file)
 	if err != nil {
-		return nil, errors.New("file not found")
+		err = fmt.Errorf("error reading file from IndexedDB: %w", err)
 	}
-	return ioutil.NopCloser(bytes.NewReader(content)), nil
+	ret = ioutil.NopCloser(bytes.NewReader(content))
+	return
 }
 
 // Close closes the directory (in this implementation, this method does nothing)

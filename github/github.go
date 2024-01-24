@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
 	"strings"
 	"time"
 
@@ -112,6 +113,14 @@ func (f *FileSystem) ReadFile(dirname string) ([]byte, error) {
 
 func (f *FileSystem) Join(elem ...string) string {
 	return strings.Join(elem, "/")
+}
+
+func (f *FileSystem) Base(filename string) string {
+	return path.Base(filename)
+}
+
+func (f *FileSystem) Abs(path string) (string, error) {
+	return path, nil
 }
 
 func GetHttpFile(path string) ([]byte, error) {

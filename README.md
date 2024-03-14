@@ -48,3 +48,7 @@ generate token <https://github.com/settings/tokens>
 ```
 $ ispx -ghtoken your_github_api_token github.com/goplus/FlappyCalf
 ```
+
+### run spx offline demo
+
+see [Offline SPX Project](offline_spx/README.md)

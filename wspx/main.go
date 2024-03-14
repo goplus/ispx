@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"syscall/js"
 
 	"github.com/goplus/igop"
@@ -82,14 +83,29 @@ func main() {
 		if err != nil {
 			log.Panicln(err)
 		}
-		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
+		type Gamer interface {
+			initGame(sprites []spx.Spriter) *spx.Game
+		}
+		gameRun := func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
 			assert := root + "/" + resource.(string)
 			fs, err := github.NewDir(client, assert)
 			if err != nil {
 				log.Panicln(err)
 			}
 			spx.Gopt_Game_Run(game, fs, gameConf...)
+		}
+		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Main", func(game Gamer, sprites ...spx.Spriter) {
+			g := game.initGame(sprites)
+			if me, ok := game.(interface{ MainEntry() }); ok {
+				me.MainEntry()
+			}
+			v := reflect.ValueOf(g).Elem().FieldByName("isRunned")
+			if v.IsValid() && v.Bool() {
+				return
+			}
+			gameRun(game.(spx.Gamer), "assets")
 		})
+		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", gameRun)
 	} else {
 		if flagVerbose {
 			log.Println("BuildDir", path)

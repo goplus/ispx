@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 
 	"github.com/goplus/igop"
 	"github.com/goplus/igop/gopbuild"
@@ -43,6 +42,20 @@ func init() {
 	flag.StringVar(&flagGithubToken, "ghtoken", "", "set github.com api token")
 }
 
+type ProxyGamer struct {
+	spx.Gamer
+	onEndMainEntry func()
+}
+
+func (p *ProxyGamer) MainEntry() {
+	if me, ok := p.Gamer.(interface{ MainEntry() }); ok {
+		me.MainEntry()
+	}
+	if p.onEndMainEntry != nil {
+		p.onEndMainEntry()
+	}
+}
+
 func main() {
 	flag.Parse()
 	args := flag.Args()
@@ -66,6 +79,26 @@ func main() {
 		data []byte
 		err  error
 	)
+
+	err = gopbuild.RegisterPackagePatch(ctx, "github.com/goplus/spx", `
+package spx
+
+import "github.com/goplus/spx"
+
+// GetWidget returns the widget instance with given name. It panics if not found.
+func Gopt_Game_Gopx_GetWidget[T any](sg spx.ShapeGetter, name string) *T {
+	widget := spx.GetWidget_(sg, name)
+	if result, ok := widget.(interface{}).(*T); ok {
+		return result
+	} else {
+		panic("GetWidget: type mismatch")
+	}
+}
+`)
+	if err != nil {
+		log.Panicln(err)
+	}
+
 	if root, ok := github.IsSupport(path); ok {
 		if flagVerbose {
 			github.Verbose = true
@@ -82,15 +115,6 @@ func main() {
 		if err != nil {
 			log.Panicln(err)
 		}
-		// func Gopt_Game_Main(game Gamer, sprites ...Spriter) {
-		// 	g := game.initGame(sprites)
-		// 	if me, ok := game.(interface{ MainEntry() }); ok {
-		// 		me.MainEntry()
-		// 	}
-		// 	if !g.isRunned {
-		// 		Gopt_Game_Run(game, "assets")
-		// 	}
-		// }
 
 		type Gamer interface {
 			initGame(sprites []spx.Spriter) *spx.Game
@@ -103,16 +127,17 @@ func main() {
 			}
 			spx.Gopt_Game_Run(game, fs, gameConf...)
 		}
-		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Main", func(game Gamer, sprites ...spx.Spriter) {
-			g := game.initGame(sprites)
-			if me, ok := game.(interface{ MainEntry() }); ok {
-				me.MainEntry()
+		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Main", func(game spx.Gamer, sprites ...spx.Spriter) {
+			p := &ProxyGamer{}
+			p.Gamer = game
+			p.onEndMainEntry = func() {
+				if me, ok := game.(interface{ IsRunning() bool }); ok {
+					if !me.IsRunning() {
+						gameRun(game.(spx.Gamer), "assets")
+					}
+				}
 			}
-			v := reflect.ValueOf(g).Elem().FieldByName("isRunned")
-			if v.IsValid() && v.Bool() {
-				return
-			}
-			gameRun(game.(spx.Gamer), "assets")
+			spx.Gopt_Game_Main(p, sprites...)
 		})
 		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", gameRun)
 	} else {

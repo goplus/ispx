@@ -8,12 +8,11 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"reflect"
 
 	"github.com/goplus/igop"
 	"github.com/goplus/igop/gopbuild"
 	"github.com/goplus/ispx/github"
-	"github.com/goplus/spx"
+	spxfs "github.com/goplus/spx/fs"
 
 	_ "github.com/goplus/igop/pkg/fmt"
 	_ "github.com/goplus/igop/pkg/math"
@@ -82,39 +81,14 @@ func main() {
 		if err != nil {
 			log.Panicln(err)
 		}
-		// func Gopt_Game_Main(game Gamer, sprites ...Spriter) {
-		// 	g := game.initGame(sprites)
-		// 	if me, ok := game.(interface{ MainEntry() }); ok {
-		// 		me.MainEntry()
-		// 	}
-		// 	if !g.isRunned {
-		// 		Gopt_Game_Run(game, "assets")
-		// 	}
-		// }
-
-		type Gamer interface {
-			initGame(sprites []spx.Spriter) *spx.Game
-		}
-		gameRun := func(game spx.Gamer, resource interface{}, gameConf ...*spx.Config) {
-			assert := root + "/" + resource.(string)
+		spxfs.RegisterSchema("", func(file string) (spxfs.Dir, error) {
+			assert := root + "/" + file
 			fs, err := github.NewDir(client, assert)
 			if err != nil {
-				log.Panicln(err)
+				log.Panicln("load fs error", err)
 			}
-			spx.Gopt_Game_Run(game, fs, gameConf...)
-		}
-		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Main", func(game Gamer, sprites ...spx.Spriter) {
-			g := game.initGame(sprites)
-			if me, ok := game.(interface{ MainEntry() }); ok {
-				me.MainEntry()
-			}
-			v := reflect.ValueOf(g).Elem().FieldByName("isRunned")
-			if v.IsValid() && v.Bool() {
-				return
-			}
-			gameRun(game.(spx.Gamer), "assets")
+			return fs, nil
 		})
-		igop.RegisterExternal("github.com/goplus/spx.Gopt_Game_Run", gameRun)
 	} else {
 		if flagVerbose {
 			log.Println("BuildDir", path)
